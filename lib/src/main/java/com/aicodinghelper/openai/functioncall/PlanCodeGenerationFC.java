@@ -29,7 +29,7 @@ public class PlanCodeGenerationFC {
 
         }
 
-        public Step(Integer index, String action, String filepath, String edit_summary, List edit_filepaths) {
+        public Step(Integer index, String action, String filepath, String edit_summary, List<String> edit_filepaths) {
             this.index = index;
             this.action = action;
             this.filepath = filepath;
