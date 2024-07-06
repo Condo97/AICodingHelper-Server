@@ -5,13 +5,12 @@
 build
 
 # Ignore Keys folder and class
-/lib/src/main/java/com/aicodinghelper/keys/
-
+/lib/main/java/com/aicodinghelper/keys/
 
 # Ignore Out directory
 /lib/out/
 
 # Ignore testing keystore
-/chitchatserver.com.jks
-/lib/out/keys/SubscriptionKey_PJ323P8QVH.p8
+#/chitchatserver.com.jks
+#/lib/out/keys/SubscriptionKey_PJ323P8QVH.p8
 /lib/keys/
