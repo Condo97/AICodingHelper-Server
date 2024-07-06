@@ -8,7 +8,7 @@ build
 /lib/main/java/com/aicodinghelper/keys/
 
 # Ignore Out directory
-/lib/out/
+#/lib/out/
 
 # Ignore testing keystore
 #/chitchatserver.com.jks
