@@ -4,14 +4,14 @@
 # Ignore Gradle build output directory
 build
 
-# Ignore Keys class
-/lib/src/main/java/writesmith/keys/Keys.java
+# Ignore Keys folder and class
+/lib/src/main/java/com/aicodinghelper/keys/
+
 
 # Ignore Out directory
 /lib/out/
 
 # Ignore testing keystore
 /chitchatserver.com.jks
-/keys/SubscriptionKey_PJ323P8QVH.p8
+/lib/out/keys/SubscriptionKey_PJ323P8QVH.p8
 /lib/keys/
-/lib/src/main/java/com/writesmith/keys/Keys.java

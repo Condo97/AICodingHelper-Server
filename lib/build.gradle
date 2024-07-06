@@ -13,15 +13,17 @@ plugins {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'com.writesmith.Main'
+        attributes 'Main-Class': 'com.aicodinghelper.Main'
     }
 
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 
+    from(sourceSets.main.resources.srcDirs) // Include resources
+
     destinationDirectory = file("out")
-    archiveBaseName = "WriteSmith_Server"
+    archiveBaseName = "AICodingHelperServer"
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
