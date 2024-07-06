@@ -25,6 +25,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.http.HttpClient;
 import java.sql.SQLException;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FunctionCallEndpoint {
 
@@ -34,10 +36,23 @@ public class FunctionCallEndpoint {
         // Get u_aT
         User_AuthToken u_aT = User_AuthTokenDAOPooled.get(request.getAuthToken());
 
+        List<OAIChatCompletionRequestMessage> messages = new ArrayList<>();
+
+        // Create system message with request system message if not null or empty and add to messages
+        if (request.getSystemMessage() != null && !request.getSystemMessage().isEmpty()) {
+            messages.add(
+                    new OAIChatCompletionRequestMessageBuilder(CompletionRole.SYSTEM)
+                            .addText(request.getSystemMessage())
+                            .build()
+            );
+        }
+
         // Create user message with request input
-        OAIChatCompletionRequestMessage userMessage = new OAIChatCompletionRequestMessageBuilder(CompletionRole.USER)
-                .addText(request.getInput())
-                .build();
+        messages.add(
+                new OAIChatCompletionRequestMessageBuilder(CompletionRole.USER)
+                        .addText(request.getInput())
+                        .build()
+        );
 
         // Perform function call to get response
         OAIGPTChatCompletionResponse response = FCClient.serializedChatCompletion(
@@ -48,8 +63,8 @@ public class FunctionCallEndpoint {
                 null, // TODO: Make a function with a signature not including responseFormatType
                 Keys.openAiAPI,
                 httpClient,
-                true,
-                userMessage
+                messages,
+                true
         );
 
         // Create Chat in DB for function call TODO: This should be moved! Maybe to a function that contains the perform function call so they're dependant on each other
