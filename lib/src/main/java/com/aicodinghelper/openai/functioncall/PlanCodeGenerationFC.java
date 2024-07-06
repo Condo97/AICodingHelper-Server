@@ -22,15 +22,19 @@ public class PlanCodeGenerationFC {
         @FCParameter(description = "only for edit, the summary of the edits to be made, for use when prompting GPT with the changes that should be made", required = false)
         private String edit_summary;
 
+        @FCParameter(description = "only for edit, the files necessary to reference from the included filemap or created files")
+        private List<String> edit_filepaths;
+
         public Step() {
 
         }
 
-        public Step(Integer index, String action, String filepath, String edit_summary) {
+        public Step(Integer index, String action, String filepath, String edit_summary, List edit_filepaths) {
             this.index = index;
             this.action = action;
             this.filepath = filepath;
             this.edit_summary = edit_summary;
+            this.edit_filepaths = edit_filepaths;
         }
 
         public Integer getIndex() {
@@ -47,6 +51,10 @@ public class PlanCodeGenerationFC {
 
         public String getEdit_summary() {
             return edit_summary;
+        }
+
+        public List<String> getEdit_filepaths() {
+            return edit_filepaths;
         }
 
     }
