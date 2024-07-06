@@ -23,18 +23,18 @@ public class PlanCodeGenerationFC {
         private String edit_summary;
 
         @FCParameter(description = "only for edit, the files necessary to reference from the included filemap or created files")
-        private List<String> edit_filepaths;
+        private List<String> edit_reference_filepaths;
 
         public Step() {
 
         }
 
-        public Step(Integer index, String action, String filepath, String edit_summary, List<String> edit_filepaths) {
+        public Step(Integer index, String action, String filepath, String edit_summary, List<String> edit_reference_filepaths) {
             this.index = index;
             this.action = action;
             this.filepath = filepath;
             this.edit_summary = edit_summary;
-            this.edit_filepaths = edit_filepaths;
+            this.edit_reference_filepaths = edit_reference_filepaths;
         }
 
         public Integer getIndex() {
@@ -53,8 +53,8 @@ public class PlanCodeGenerationFC {
             return edit_summary;
         }
 
-        public List<String> getEdit_filepaths() {
-            return edit_filepaths;
+        public List<String> getEdit_reference_filepaths() {
+            return edit_reference_filepaths;
         }
 
     }
