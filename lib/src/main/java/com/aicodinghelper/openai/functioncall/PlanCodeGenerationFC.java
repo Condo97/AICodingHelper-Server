@@ -5,7 +5,7 @@ import com.oaigptconnector.model.FunctionCall;
 
 import java.util.List;
 
-@FunctionCall(name = "plan_code_generation", functionDescription = "Plan code creation for the given files and instructions. You can edit, add, or delete. You must plan the entire process here")
+@FunctionCall(name = "plan_code_generation", functionDescription = "Plan code creation for the given files and instructions. You can edit, create, or delete and added files must be created before edited. You must plan the entire process here.")
 public class PlanCodeGenerationFC {
 
     public static class Step {
@@ -16,7 +16,7 @@ public class PlanCodeGenerationFC {
         @FCParameter(stringEnumValues = {"edit", "create", "delete"})
         private String action;
 
-        @FCParameter
+        @FCParameter(description = "the filepath to perform the action on")
         private String filepath;
 
         @FCParameter(description = "only for edit, the instructions of the edits to be made, for use when prompting GPT with the changes that should be made", required = false)
