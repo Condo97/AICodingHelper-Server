@@ -13,7 +13,7 @@ public class PlanCodeGenerationFC {
         @FCParameter
         private Integer index;
 
-        @FCParameter(stringEnumValues = {"edit", "create", "delete"})
+        @FCParameter(description = "Edit existing or created in previous step files. Create is mkdir only so you must call edit later to add content.", stringEnumValues = {"edit", "create", "delete"})
         private String action;
 
         @FCParameter(description = "the filepath to perform the action on")
