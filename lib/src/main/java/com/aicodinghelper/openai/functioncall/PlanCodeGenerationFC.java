@@ -5,7 +5,7 @@ import com.oaigptconnector.model.FunctionCall;
 
 import java.util.List;
 
-@FunctionCall(name = "plan_code_generation", functionDescription = "Plan code creation for the given files and instructions. You can edit, create, or delete and added files must be created before edited. You must plan the entire process here.")
+@FunctionCall(name = "plan_code_generation", functionDescription = "Plan code creation for the given files and instructions. You can edit, create, or delete files. To create and edit a file you must do a create action followed by an edit action. Provide detailed instructions in edit_instructions and include all files necessary including newly created files if necessary in reference_filepaths. You must plan the entire process here.")
 public class PlanCodeGenerationFC {
 
     public static class Step {
