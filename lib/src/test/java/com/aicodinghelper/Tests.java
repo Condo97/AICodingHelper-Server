@@ -2,21 +2,11 @@ package com.aicodinghelper;
 
 import appletransactionclient.exception.AppStoreErrorResponseException;
 import com.aicodinghelper.util.TokenCounter;
-import com.dbclient.DBClient;
-import com.oaigptconnector.model.*;
-import com.oaigptconnector.model.exception.OpenAIGPTException;
 import com.oaigptconnector.model.generation.OpenAIGPTModels;
-import com.oaigptconnector.model.request.chat.completion.OAIChatCompletionRequest;
-import com.oaigptconnector.model.request.chat.completion.OAIChatCompletionRequestMessage;
-import com.oaigptconnector.model.response.chat.completion.http.OAIGPTChatCompletionResponse;
 import com.aicodinghelper.core.service.endpoints.*;
-import com.aicodinghelper.core.service.request.FeedbackRequest;
 import com.aicodinghelper.core.service.response.*;
-import com.aicodinghelper.database.model.Sender;
-import com.aicodinghelper.database.model.objects.Chat;
 import com.aicodinghelper.exceptions.AutoIncrementingDBObjectExistsException;
 import com.aicodinghelper.exceptions.DBObjectNotFoundFromQueryException;
-import com.aicodinghelper.exceptions.PreparedStatementMissingArgumentException;
 import com.aicodinghelper.connectionpool.SQLConnectionPoolInstance;
 import com.aicodinghelper.database.dao.pooled.TransactionDAOPooled;
 import com.aicodinghelper.database.dao.pooled.User_AuthTokenDAOPooled;
@@ -26,43 +16,21 @@ import com.aicodinghelper.database.model.objects.Transaction;
 import com.aicodinghelper.database.model.objects.User_AuthToken;
 import com.aicodinghelper.core.service.request.AuthRequest;
 import com.aicodinghelper.core.service.request.RegisterTransactionRequest;
-import org.eclipse.jetty.util.resource.Resource;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import sqlcomponentizer.dbserializer.DBSerializerException;
 import sqlcomponentizer.dbserializer.DBSerializerPrimaryKeyMissingException;
-import sqlcomponentizer.preparedstatement.ComponentizedPreparedStatement;
-import sqlcomponentizer.preparedstatement.component.OrderByComponent;
-import sqlcomponentizer.preparedstatement.component.condition.SQLOperators;
-import sqlcomponentizer.preparedstatement.statement.InsertIntoComponentizedPreparedStatementBuilder;
-import sqlcomponentizer.preparedstatement.statement.SelectComponentizedPreparedStatementBuilder;
-import sqlcomponentizer.preparedstatement.statement.UpdateComponentizedPreparedStatementBuilder;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Types;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class Tests {
 
@@ -192,7 +160,7 @@ public class Tests {
 
         // Register transaction
         BodyResponse registerTransactionBR = RegisterTransactionEndpoint.registerTransaction(rtr);
-        IsPremiumResponse ipr1 = (IsPremiumResponse)registerTransactionBR.getBody();
+        IsActiveResponse ipr1 = (IsActiveResponse)registerTransactionBR.getBody();
 
         // Get User_AuthToken
         User_AuthToken u_aT = User_AuthTokenDAOPooled.get(authToken);

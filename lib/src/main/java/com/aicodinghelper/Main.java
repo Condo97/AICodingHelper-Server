@@ -136,6 +136,7 @@ public class Main {
     private static void configureHttpEndpoints(boolean dev) {
         // POST Functions
         post(Constants.URIs.CALCULATE_TOKENS_URI, Server::calculateTokens);
+        post(Constants.URIs.GET_IS_ACTIVE_URI, Server::getIsActive);
         post(Constants.URIs.GET_REMAINING_TOKENS_URI, Server::getRemainingTokens);
         post(Constants.URIs.REGISTER_USER_URI, Server::registerUser);
         post(Constants.URIs.REGISTER_TRANSACTION_URI, Server::registerTransaction);

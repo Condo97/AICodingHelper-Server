@@ -73,6 +73,44 @@ public class Server {
     }
 
     /***
+     * Get Is Active
+     *
+     * Gets if the user has an active subscription.
+     *
+     * Request: {
+     *     authToken: String - Authentication token generated from registerUser
+     * }
+     *
+     * Response: {
+     *     Body: {
+     *         isActive: Boolean - Active status of the user's subscription
+     *     }
+     *     Success: Integer - Integer denoting success, 1 if true
+     * }
+     *
+     * @param req Request object given by Spark
+     * @param res Response object given by Spark
+     * @return Value of JSON response as String
+     */
+    public static String getIsActive(Request req, Response res) throws IOException, MalformedJSONException, DBSerializerPrimaryKeyMissingException, SQLException, CertificateException, URISyntaxException, KeyStoreException, NoSuchAlgorithmException, InterruptedException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, UnrecoverableKeyException, DBSerializerException, AppStoreErrorResponseException, InvalidKeySpecException, InstantiationException {
+        AuthRequest aRequest;
+
+        try {
+            aRequest = new ObjectMapper().readValue(req.body(), AuthRequest.class);
+        } catch (JsonMappingException | JsonParseException e) {
+            System.out.println("Exception when Getting Is Active... The request: " + req.body());
+            e.printStackTrace();
+            throw new MalformedJSONException("Malformed JSON - " + e.getMessage());
+        }
+
+        BodyResponse br = BodyResponseFactory.createSuccessBodyResponse(
+                GetIsActiveEndpoint.getIsActive(aRequest)
+        );
+
+        return new ObjectMapper().writeValueAsString(br);
+    }
+
+    /***
      * Function Call
      *
      * Performs the given function call and returns the response.
