@@ -34,12 +34,12 @@ public final class Constants {
 
         public static final class ID {
 
-            public static final String WEEKLY_LOW = "aicodinghelper_weekly_low";
-            public static final String MONTHLY_LOW = "aicodinghelper_monthly_low";
-            public static final String WEEKLY_MEDIUM = "aicodinghelper_weekly_medium";
-            public static final String MONTHLY_MEDIUM = "aicodinghelper_monthly_medium";
-            public static final String WEEKLY_HIGH = "aicodinghelper_weekly_high";
-            public static final String MONTHLY_HIGH = "aicodinghelper_monthly_high";
+            public static final String WEEKLY_LOW = "aicodinghelperweeklylow";
+            public static final String MONTHLY_LOW = "aicodinghelpermonthlylow";
+            public static final String WEEKLY_MEDIUM = "aicodinghelperweeklymedium";
+            public static final String MONTHLY_MEDIUM = "aicodinghelpermonthlymedium";
+            public static final String WEEKLY_HIGH = "aicodinghelperweeklyhigh";
+            public static final String MONTHLY_HIGH = "aicodinghelpermonthlyhigh";
 
         }
 
@@ -116,7 +116,7 @@ public final class Constants {
     public static final String MYSQL_URL = "jdbc:mysql://localhost:3306/aicodinghelper_schema";
 
     /* Apple Server Constants */
-    public static final String Apple_Bundle_ID = "com.acapplications.ChitChat";
+    public static final String Apple_Bundle_ID = "com.acapplications.AICodingHelper";
     public static final String Apple_Sandbox_Storekit_Base_URL = "https://api.storekit-sandbox.itunes.apple.com";
     public static final String Apple_Storekit_Base_URL = "https://api.storekit.itunes.apple.com";
     public static final String Apple_In_Apps_URL_Path = "/inApps";
