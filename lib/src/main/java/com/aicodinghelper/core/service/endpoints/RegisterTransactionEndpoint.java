@@ -2,6 +2,7 @@ package com.aicodinghelper.core.service.endpoints;
 
 import appletransactionclient.exception.AppStoreErrorResponseException;
 import com.aicodinghelper.apple.iapvalidation.TransactionPersistentAppleUpdater;
+import com.aicodinghelper.database.model.Subscriptions;
 import com.aicodinghelper.exceptions.DBObjectNotFoundFromQueryException;
 import com.aicodinghelper.database.dao.pooled.User_AuthTokenDAOPooled;
 import com.aicodinghelper.core.service.response.factory.BodyResponseFactory;
@@ -11,6 +12,7 @@ import com.aicodinghelper.database.model.objects.User_AuthToken;
 import com.aicodinghelper.core.service.request.RegisterTransactionRequest;
 import com.aicodinghelper.core.service.response.BodyResponse;
 import com.aicodinghelper.core.service.response.IsActiveResponse;
+import com.aicodinghelper.util.ProductIDSubscriptionAdapter;
 import sqlcomponentizer.dbserializer.DBSerializerException;
 import sqlcomponentizer.dbserializer.DBSerializerPrimaryKeyMissingException;
 
@@ -35,15 +37,18 @@ public class RegisterTransactionEndpoint {
         // Create and insert Apple updated transaction
         Transaction transaction = TransactionPersistentAppleUpdater.insertAppleUpdatedTransaction(u_aT.getUserID(), registerTransactionRequest.getTransactionId());
 
-        // Get isActive
+        // Get isActive and subscription
         boolean isActive = AppStoreSubscriptionStatusToIsActiveAdapter.getIsActive(transaction.getSubscriptionStatus());
+        Subscriptions subscription = ProductIDSubscriptionAdapter.getSubscription(transaction.getProductID());
 
                 // TODO: Just logging to see things, remove and make a better logging system!
                 if (isActive == true)
                     System.out.println("User " + u_aT.getUserID() + " just registered a transaction at " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
 
         // Create full validate premium response
-        IsActiveResponse fvpr = new IsActiveResponse(isActive);
+        IsActiveResponse fvpr = new IsActiveResponse(
+                isActive,
+                subscription);
 
         // Create and return successful body response with full validate premium response
         return BodyResponseFactory.createSuccessBodyResponse(fvpr);
