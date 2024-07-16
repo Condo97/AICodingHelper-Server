@@ -8,8 +8,8 @@ public class FeedbackRequest extends AuthRequest {
 
     }
 
-    public FeedbackRequest(String authToken, String feedback) {
-        super(authToken);
+    public FeedbackRequest(String authToken, String openAIKey, String feedback) {
+        super(authToken, openAIKey);
         this.feedback = feedback;
     }
 

@@ -12,8 +12,8 @@ public class FunctionCallRequest extends AuthRequest {
 
     }
 
-    public FunctionCallRequest(String authToken, OpenAIGPTModels model, String systemMessage, String input) {
-        super(authToken);
+    public FunctionCallRequest(String authToken, String openAIKey, OpenAIGPTModels model, String systemMessage, String input) {
+        super(authToken, openAIKey);
         this.model = model;
         this.systemMessage = systemMessage;
         this.input = input;

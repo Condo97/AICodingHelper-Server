@@ -180,7 +180,7 @@ public class Tests {
         final Boolean expectedIsPremiumValue2 = false;
 
         // Create authRequest
-        AuthRequest aRequest = new AuthRequest(authToken);
+        AuthRequest aRequest = new AuthRequest(authToken, null);
 
         // Get Is Premium from endpoint TODO: Should there be an endpoint for getting the subscription tier? What would the data received be?
 //        BodyResponse isPremiumBR = GetIsPremiumEndpoint.getIsPremium(aRequest);

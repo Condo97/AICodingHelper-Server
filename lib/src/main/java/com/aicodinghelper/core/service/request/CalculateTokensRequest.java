@@ -11,8 +11,8 @@ public class CalculateTokensRequest extends AuthRequest {
 
     }
 
-    public CalculateTokensRequest(String authToken, OpenAIGPTModels model, String input) {
-        super(authToken);
+    public CalculateTokensRequest(String authToken, String openAIKey, OpenAIGPTModels model, String input) {
+        super(authToken, openAIKey);
         this.model = model;
         this.input = input;
     }

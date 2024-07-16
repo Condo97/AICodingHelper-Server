@@ -172,47 +172,53 @@ public class GetChatWebSocket {
 
         getAuthTokenTime = LocalDateTime.now();
 
+        // If OpenAIKey is included, set isUsingSelfServeOpenAIKey to true and openAIKey to it otherwise false and openAIKey to Keys.openAIKey
+        boolean isUsingSelfServeOpenAIKey = gcRequest.getOpenAIKey() != null;
+        String openAIKey = gcRequest.getOpenAIKey() != null ? gcRequest.getOpenAIKey() : Keys.openAiAPI;
 
-        /*** GET TOKENS REMAINING ***/
+        // If not using self serve openAIKey get estimated tokens and ensure user has enough tokens to generate the chat
+        if (!isUsingSelfServeOpenAIKey) {
+            /*** GET TOKENS REMAINING ***/
 
-        // Get cooldown controlled apple updated most recent transaction
-        Transaction mostRecentTransaction = TransactionPersistentAppleUpdater.getCooldownControlledAppleUpdatedMostRecentTransaction(u_aT.getUserID());
+            // Get cooldown controlled apple updated most recent transaction
+            Transaction mostRecentTransaction = TransactionPersistentAppleUpdater.getCooldownControlledAppleUpdatedMostRecentTransaction(u_aT.getUserID());
 
-        // Get remainingTokens
-        Long remainingTokens;
-        try {
-            remainingTokens = ChatRemainingCalculator.calculateRemaining(u_aT, mostRecentTransaction);
-        } catch (DBSerializerException | InterruptedException | SQLException | InvocationTargetException |
-                 IllegalAccessException | NoSuchMethodException | InstantiationException e) {
-            // I'm pretty sure these are just setup stuff too so throw UnhandledException unless I see it throwing in the console :)
-            throw new UnhandledException(e, "Error calculating remainingTokens. Please report this and try again later.");
-        }
-
-        // Get estimated tokens for chat with TokenCounter
-        int estimatedTokens = TokenCounter.getTotalTokenCount(gcRequest.getChatCompletionRequest().getModel(), gcRequest.getChatCompletionRequest());
-
-        // If remainingTokens is not null (infinite) and it minus estimatedTokens plus tolerance is less than 0, send cap reached response in GetChatResponse
-        if (remainingTokens != null && remainingTokens - estimatedTokens + tokenEstimationTolerance <= 0) {
-            /* TODO: Do the major annotations and rework all of this to be better lol */
-            // Send BodyResponse with cap reached error and GetChatResponse with cap reached response
-//            GetChatResponse gcr = new GetChatResponse(GetChatCapReachedResponses.getRandomResponse(), null, null, 0l); TODO: Reinstate this after new app build has been published so that it works properly and is cleaner here.. unless this implementation is better and the "limit" just needs to be a constant somewhere
-            ResponseStatus rs = ResponseStatus.CAP_REACHED_ERROR;
-
-            // Create StatusResponse with ResponseStatus
-            StatusResponse sr = StatusResponseFactory.createStatusResponse(rs);
-
-            // Send StatusResponse
+            // Get remainingTokens
+            Long remainingTokens;
             try {
-                session.getRemote().sendString(new ObjectMapper().writeValueAsString(sr));
-            } catch (IOException e) {
-                // I'm pretty sure this happens if the socket connection is just invalid, so maybe I'll handle it differently in the future but for now throw UnhandledException unless I see it throwing in the console :)
-                throw new UnhandledException(e, "Error sending body response to socket connection. Please report this and try again later.");
+                remainingTokens = ChatRemainingCalculator.calculateRemaining(u_aT, mostRecentTransaction);
+            } catch (DBSerializerException | InterruptedException | SQLException | InvocationTargetException |
+                     IllegalAccessException | NoSuchMethodException | InstantiationException e) {
+                // I'm pretty sure these are just setup stuff too so throw UnhandledException unless I see it throwing in the console :)
+                throw new UnhandledException(e, "Error calculating remainingTokens. Please report this and try again later.");
             }
 
-            // Print stream chat generation cap reached TODO: Move this and make logging better
-            System.out.println("Chat Stream Cap Reached " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
+            // Get estimated tokens for chat with TokenCounter
+            int estimatedTokens = TokenCounter.getTotalTokenCount(gcRequest.getChatCompletionRequest().getModel(), gcRequest.getChatCompletionRequest());
 
-            throw new CapReachedException("Chat cap reached for user. Please upgrade to continue.");
+            // If remainingTokens is not null (infinite) and it minus estimatedTokens plus tolerance is less than 0, send cap reached response in GetChatResponse
+            if (remainingTokens != null && remainingTokens - estimatedTokens + tokenEstimationTolerance <= 0) {
+                /* TODO: Do the major annotations and rework all of this to be better lol */
+                // Send BodyResponse with cap reached error and GetChatResponse with cap reached response
+//            GetChatResponse gcr = new GetChatResponse(GetChatCapReachedResponses.getRandomResponse(), null, null, 0l); TODO: Reinstate this after new app build has been published so that it works properly and is cleaner here.. unless this implementation is better and the "limit" just needs to be a constant somewhere
+                ResponseStatus rs = ResponseStatus.CAP_REACHED_ERROR;
+
+                // Create StatusResponse with ResponseStatus
+                StatusResponse sr = StatusResponseFactory.createStatusResponse(rs);
+
+                // Send StatusResponse
+                try {
+                    session.getRemote().sendString(new ObjectMapper().writeValueAsString(sr));
+                } catch (IOException e) {
+                    // I'm pretty sure this happens if the socket connection is just invalid, so maybe I'll handle it differently in the future but for now throw UnhandledException unless I see it throwing in the console :)
+                    throw new UnhandledException(e, "Error sending body response to socket connection. Please report this and try again later.");
+                }
+
+                // Print stream chat generation cap reached TODO: Move this and make logging better
+                System.out.println("Chat Stream Cap Reached " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
+
+                throw new CapReachedException("Chat cap reached for user. Please upgrade to continue.");
+            }
         }
 
         // Get and chat completion request stream_options include usage to true
@@ -229,7 +235,7 @@ public class GetChatWebSocket {
 
         // Do stream request with OpenAI right here for now TODO:
         try {
-            chatStream = OAIClient.postChatCompletionStream(chatCompletionRequest, Keys.openAiAPI, httpClient);
+            chatStream = OAIClient.postChatCompletionStream(chatCompletionRequest, openAIKey, httpClient);
         } catch (IOException e) {
             // I think this is called if the chat stream is closed at any point including when it normally finishes, so just do nothing for now... If so, these should be combined and the print should be removed and I think it's just fine lol.. Actually these may not be called unless there is an error establishing a connection.. So maybe just throw UnhandledException unless I see it throwing in the console
             System.out.println("CONNECTION CLOSED (IOException)");
@@ -302,12 +308,14 @@ public class GetChatWebSocket {
 
         /*** FINISH UP ***/
 
-        // Insert Chat in DB
-        ChatFactoryDAO.create(
-                u_aT.getUserID(),
-                completionTokens.get(),
-                promptTokens.get()
-        );
+        // If not isUsingSelfServeOpenAIKey, Insert Chat in DB
+        if (!isUsingSelfServeOpenAIKey) {
+            ChatFactoryDAO.create(
+                    u_aT.getUserID(),
+                    completionTokens.get(),
+                    promptTokens.get()
+            );
+        }
 
 //        // Print log to console
 //        printStreamedGeneratedChatDoBetterLoggingLol(gc, purifiedOAIChatCompletionRequest.getRequest(), isPremium, startTime, getAuthTokenTime, getIsPremiumTime, beforeStartStreamTime, firstChatTime);

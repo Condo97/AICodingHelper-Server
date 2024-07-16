@@ -36,6 +36,10 @@ public class FunctionCallEndpoint {
         // Get u_aT
         User_AuthToken u_aT = User_AuthTokenDAOPooled.get(request.getAuthToken());
 
+        // If user included openAIKey set isUsingSelfServeOpenAIKey as true and use that as openAIKey otherwise false and use Keys openAiAPI
+        boolean isUsingSelfServeOpenAIKey = request.getOpenAIKey() != null;
+        String openAIKey = request.getOpenAIKey() != null ? request.getOpenAIKey() : Keys.openAiAPI;
+
         List<OAIChatCompletionRequestMessage> messages = new ArrayList<>();
 
         // Create system message with request system message if not null or empty and add to messages
@@ -61,18 +65,20 @@ public class FunctionCallEndpoint {
                 Constants.Additional.functionCallGenerationTokenLimit,
                 Constants.Additional.functionCallDefaultTemperature,
                 null, // TODO: Make a function with a signature not including responseFormatType
-                Keys.openAiAPI,
+                openAIKey,
                 httpClient,
                 messages,
                 true
         );
 
-        // Create Chat in DB for function call TODO: This should be moved! Maybe to a function that contains the perform function call so they're dependant on each other
-        ChatFactoryDAO.create(
-                u_aT.getUserID(),
-                response.getUsage().getCompletion_tokens(),
-                response.getUsage().getPrompt_tokens()
-        );
+        // If is not using self serve openAIKey create Chat in DB for function call TODO: This should be moved! Maybe to a function that contains the perform function call so they're dependant on each other
+        if (!isUsingSelfServeOpenAIKey) {
+            ChatFactoryDAO.create(
+                    u_aT.getUserID(),
+                    response.getUsage().getCompletion_tokens(),
+                    response.getUsage().getPrompt_tokens()
+            );
+        }
 
         // Return OAIGPTChatCompletionResponse in OAICompletionResponse
         return new OAICompletionResponse(response);

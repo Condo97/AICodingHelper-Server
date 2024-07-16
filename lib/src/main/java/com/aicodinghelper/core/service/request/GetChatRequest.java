@@ -17,10 +17,9 @@ public class GetChatRequest extends AuthRequest {
 
     }
 
-    public GetChatRequest(String authToken, OAIChatCompletionRequest chatCompletionRequest) {
-        super(authToken);
+    public GetChatRequest(String authToken, String openAIKey, OAIChatCompletionRequest chatCompletionRequest) {
+        super(authToken, openAIKey);
         this.chatCompletionRequest = chatCompletionRequest;
-//        this.model = model;
     }
 
     public OAIChatCompletionRequest getChatCompletionRequest() {
