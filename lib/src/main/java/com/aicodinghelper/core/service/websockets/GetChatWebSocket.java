@@ -267,7 +267,7 @@ public class GetChatWebSocket {
                 // Get response as JsonNode
                 JsonNode responseJSON = new ObjectMapper().readValue(response, JsonNode.class);
 
-//                System.out.println("RESPONSE: " + response);
+                System.out.println("RESPONSE: " + response);
 
                 // Get responseJSON as OpenAIGPTChatCompletionStreamResponse
                 OpenAIGPTChatCompletionStreamResponse streamResponse;
@@ -313,7 +313,7 @@ public class GetChatWebSocket {
 
             } catch (JsonMappingException | JsonParseException e) {
                 // TODO: If cannot map response as JSON, skip for now, this is fine as there is only one format for the response as far as I know now
-
+                e.printStackTrace();
             } catch (IOException e) {
                 // TODO: This is only called in this case if ObjectMapper does not throw a JsonMappingException or JsonParseException, but it is thrown in the same methods that call those, so it's okay for now for the same reason
 
