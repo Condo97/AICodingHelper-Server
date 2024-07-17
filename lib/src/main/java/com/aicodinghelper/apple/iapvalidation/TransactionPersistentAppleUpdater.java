@@ -32,8 +32,8 @@ public class TransactionPersistentAppleUpdater {
 
 //        // If most recent transaction check date + Transaction_Status_Apple_Update_Cooldown is before current local date time
 //        if (mostRecentTransaction.getCheckDate().plus(Duration.ofSeconds(Constants.Transaction_Status_Apple_Update_Cooldown)).isBefore(LocalDateTime.now())) {
-        // If current timestamp is after most recent transaction check date plus cooldown
-        if (LocalDateTime.now().isAfter(mostRecentTransaction.getCheckDate().plus(Duration.ofSeconds(Constants.Transaction_Status_Apple_Update_Cooldown)))) {
+        // If most recent transaction check date is null or current timestamp is after most recent transaction check date plus cooldown
+        if (mostRecentTransaction.getCheckDate() == null || LocalDateTime.now().isAfter(mostRecentTransaction.getCheckDate().plus(Duration.ofSeconds(Constants.Transaction_Status_Apple_Update_Cooldown)))) {
             // Update and save the Apple transaction status
             updateAndSaveAppleTransactionStatus(mostRecentTransaction);
         }
