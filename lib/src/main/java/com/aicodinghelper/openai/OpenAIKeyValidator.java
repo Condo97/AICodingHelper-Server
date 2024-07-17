@@ -31,7 +31,6 @@ public class OpenAIKeyValidator {
         );
 
         // Return true if successful or false if request throws an OpenAIGPTException and has invalidAPIKeyOpenAIGPTErrorCode as the error response code
-        boolean openAIKeyIsValid = false;
         try {
             // Get response from OAIClient
             OAIGPTChatCompletionResponse response = OAIClient.postChatCompletion(
@@ -45,6 +44,7 @@ public class OpenAIKeyValidator {
             // Return true
             return true;
         } catch (OpenAIGPTException e) {
+            e.printStackTrace();
             if (e.getErrorObject().getError().getCode().equals(invalidAPIKeyOpenAIGPTErrorCode)) {
                 // Return false
                 return false;
