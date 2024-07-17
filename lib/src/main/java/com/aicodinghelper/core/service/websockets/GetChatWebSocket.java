@@ -7,6 +7,7 @@ import com.aicodinghelper.core.service.response.factory.StatusResponseFactory;
 import com.aicodinghelper.database.model.objects.Transaction;
 import com.aicodinghelper.util.TokenCounter;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +32,7 @@ import com.aicodinghelper.core.service.request.GetChatRequest;
 import com.aicodinghelper.core.service.response.BodyResponse;
 import com.aicodinghelper.core.service.response.ErrorResponse;
 import com.aicodinghelper.core.service.response.GetChatStreamResponse;
+import com.oaigptconnector.model.response.error.OpenAIGPTErrorResponse;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -268,7 +270,23 @@ public class GetChatWebSocket {
 //                System.out.println("RESPONSE: " + response);
 
                 // Get responseJSON as OpenAIGPTChatCompletionStreamResponse
-                OpenAIGPTChatCompletionStreamResponse streamResponse = new ObjectMapper().treeToValue(responseJSON, OpenAIGPTChatCompletionStreamResponse.class);
+                OpenAIGPTChatCompletionStreamResponse streamResponse;
+                try {
+                    streamResponse = new ObjectMapper().treeToValue(responseJSON, OpenAIGPTChatCompletionStreamResponse.class);
+                } catch (JsonProcessingException e) {
+                    // Try to parse OpenAIGPTErrorResponse and send in BodyResponse to client and return
+                    OpenAIGPTErrorResponse errorResponse = new ObjectMapper().treeToValue(responseJSON, OpenAIGPTErrorResponse.class);
+
+                    GetChatStreamResponse gcResponse = new GetChatStreamResponse(
+                            errorResponse
+                    );
+
+                    BodyResponse br = BodyResponseFactory.createSuccessBodyResponse(gcResponse);
+
+                    session.getRemote().sendString(new ObjectMapper().writeValueAsString(br));
+
+                    return;
+                }
 
                 // Create gcResponse with streamResponse
                 GetChatStreamResponse gcResponse = new GetChatStreamResponse(

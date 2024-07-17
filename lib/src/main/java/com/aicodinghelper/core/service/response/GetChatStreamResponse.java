@@ -4,17 +4,17 @@ import com.oaigptconnector.model.response.chat.completion.stream.OpenAIGPTChatCo
 
 public class GetChatStreamResponse {
 
-    private OpenAIGPTChatCompletionStreamResponse oaiResponse;
+    private Object oaiResponse;
 
     public GetChatStreamResponse() {
 
     }
 
-    public GetChatStreamResponse(OpenAIGPTChatCompletionStreamResponse oaiResponse) {
+    public GetChatStreamResponse(Object oaiResponse) {
         this.oaiResponse = oaiResponse;
     }
 
-    public OpenAIGPTChatCompletionStreamResponse getOaiResponse() {
+    public Object getOaiResponse() {
         return oaiResponse;
     }
 
