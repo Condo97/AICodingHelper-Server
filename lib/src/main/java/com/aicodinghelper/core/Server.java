@@ -211,7 +211,6 @@ public class Server {
         return new ObjectMapper().writeValueAsString(sr);
     }
 
-
     /***
      * Get Remaining Tokens
      *
@@ -245,6 +244,41 @@ public class Server {
 
         BodyResponse br = BodyResponseFactory.createSuccessBodyResponse(
                 GetRemainingTokensEndpoint.getRemainingTokens(aRequest)
+        );
+
+        return new ObjectMapper().writeValueAsString(br);
+    }
+
+    /***
+     * Validate OpenAI Key
+     *
+     * Validates a user provided OpenAI API Key.
+     *
+     * Request: {
+     *     openAIKey: String - The OpenAI API key to validate
+     * }
+     *
+     * Response: {
+     *     isValid: Boolean - If the key is valid or not
+     * }
+     *
+     * @param req Request object given by Spark
+     * @param res Response object given by Spark
+     * @return Value of JSON represented as String
+     */
+    public static String validateOpenAIKey(Request req, Response res) throws IOException, MalformedJSONException, OpenAIGPTException, InterruptedException {
+        AuthRequest aRequest;
+
+        try {
+            aRequest = new ObjectMapper().readValue(req.body(), AuthRequest.class);
+        } catch (JsonMappingException | JsonParseException e) {
+            System.out.println("Exception when Validating OpenAI Key... The request: " + req.body());
+            e.printStackTrace();
+            throw new MalformedJSONException("Malformed JSON - " + e.getMessage());
+        }
+
+        BodyResponse br = BodyResponseFactory.createSuccessBodyResponse(
+                ValidateOpenAITokenEndpoint.validateOpenAIToken(aRequest)
         );
 
         return new ObjectMapper().writeValueAsString(br);
