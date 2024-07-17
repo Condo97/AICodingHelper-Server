@@ -32,7 +32,6 @@ import com.aicodinghelper.core.service.request.GetChatRequest;
 import com.aicodinghelper.core.service.response.BodyResponse;
 import com.aicodinghelper.core.service.response.ErrorResponse;
 import com.aicodinghelper.core.service.response.GetChatStreamResponse;
-import com.oaigptconnector.model.response.error.OpenAIGPTErrorResponse;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -267,21 +266,15 @@ public class GetChatWebSocket {
                 // Get response as JsonNode
                 JsonNode responseJSON = new ObjectMapper().readValue(response, JsonNode.class);
 
-                System.out.println("RESPONSE: " + response);
+//                System.out.println("RESPONSE: " + response);
 
                 // Get responseJSON as OpenAIGPTChatCompletionStreamResponse
                 OpenAIGPTChatCompletionStreamResponse streamResponse;
                 try {
                     streamResponse = new ObjectMapper().treeToValue(responseJSON, OpenAIGPTChatCompletionStreamResponse.class);
                 } catch (JsonProcessingException e) {
-                    // Try to parse OpenAIGPTErrorResponse and send in BodyResponse to client and return
-                    OpenAIGPTErrorResponse errorResponse = new ObjectMapper().treeToValue(responseJSON, OpenAIGPTErrorResponse.class);
-
-                    GetChatStreamResponse gcResponse = new GetChatStreamResponse(
-                            errorResponse
-                    );
-
-                    BodyResponse br = BodyResponseFactory.createSuccessBodyResponse(gcResponse);
+                    // If JsonProcessingException send error response and return
+                    BodyResponse br = BodyResponseFactory.createBodyResponse(ResponseStatus.OAIGPT_ERROR, responseJSON);
 
                     session.getRemote().sendString(new ObjectMapper().writeValueAsString(br));
 
@@ -313,7 +306,7 @@ public class GetChatWebSocket {
 
             } catch (JsonMappingException | JsonParseException e) {
                 // TODO: If cannot map response as JSON, skip for now, this is fine as there is only one format for the response as far as I know now
-                e.printStackTrace();
+
             } catch (IOException e) {
                 // TODO: This is only called in this case if ObjectMapper does not throw a JsonMappingException or JsonParseException, but it is thrown in the same methods that call those, so it's okay for now for the same reason
 

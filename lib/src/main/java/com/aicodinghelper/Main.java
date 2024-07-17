@@ -142,7 +142,7 @@ public class Main {
         post(Constants.URIs.REGISTER_TRANSACTION_URI, Server::registerTransaction);
         post(Constants.URIs.SUBMIT_FEEDBACK, Server::submitFeedback);
         post(Constants.URIs.VALIDATE_OPEN_AI_KEY, Server::validateOpenAIKey);
-
+        
 //        post(Constants.URIs.Function.CREATE_RECIPE_IDEA, Server.Func::createRecipeIdea);
 
         // Function Calls
