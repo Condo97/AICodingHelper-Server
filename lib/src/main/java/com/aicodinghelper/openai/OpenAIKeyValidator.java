@@ -40,8 +40,6 @@ public class OpenAIKeyValidator {
                     httpClient
             );
 
-            System.out.println(response);
-
             // Return true
             return true;
         } catch (OpenAIGPTException e) {
