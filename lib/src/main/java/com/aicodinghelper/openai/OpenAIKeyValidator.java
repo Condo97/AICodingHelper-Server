@@ -24,9 +24,7 @@ public class OpenAIKeyValidator {
                 OpenAIGPTModels.GPT_4_TURBO.getName(),
                 1,
                 Constants.DEFAULT_TEMPERATURE,
-                false,
                 new OAIChatCompletionRequestResponseFormat(ResponseFormatType.TEXT),
-                new OAIChatCompletionRequestStreamOptions(true),
                 new OAIChatCompletionRequestMessageBuilder(CompletionRole.USER).addText("A").build()
         );
 
