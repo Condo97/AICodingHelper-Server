@@ -297,7 +297,7 @@ public class Server {
         bodyNode.put("finishReason", "");
 
         ObjectNode baseNode = mapper.createObjectNode();
-        baseNode.put("Success", ResponseStatus.SUCCESS.Success);
+        baseNode.put("Success", status.getValue());
         baseNode.put("Body", bodyNode);
 
         return baseNode.toString();
