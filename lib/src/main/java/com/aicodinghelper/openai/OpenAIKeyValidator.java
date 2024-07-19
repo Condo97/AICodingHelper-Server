@@ -21,7 +21,7 @@ public class OpenAIKeyValidator {
     public static boolean validate(String openAIKey) throws OpenAIGPTException, IOException, InterruptedException {
         // Create chat completion request
         OAIChatCompletionRequest chatCompletionRequest = OAIChatCompletionRequest.build(
-                OpenAIGPTModels.GPT_4_TURBO.getName(),
+                OpenAIGPTModels.GPT_4_MINI.getName(),
                 1,
                 Constants.DEFAULT_TEMPERATURE,
                 new OAIChatCompletionRequestResponseFormat(ResponseFormatType.TEXT),

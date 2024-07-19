@@ -12,7 +12,7 @@ public final class Constants {
 
     public static final class Additional {
 
-        public static final int functionCallGenerationTokenLimit = 4096;
+        public static final int functionCallGenerationTokenLimit = 16384;
         public static final int functionCallDefaultTemperature = 1;
         public static final int tokenEstimationTolerance = 250;
 
