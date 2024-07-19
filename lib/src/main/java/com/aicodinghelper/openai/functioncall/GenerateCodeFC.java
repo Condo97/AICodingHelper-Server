@@ -10,7 +10,7 @@ public class GenerateCodeFC {
 
     public static class File {
 
-        @FCParameter(description = "Will create if doesn't exist and replace if does.")
+        @FCParameter(description = "Will create if doesn't exist and replace if does. Include proper extension.")
         private String filepath;
 
         @FCParameter(description = "Content of file.")
