@@ -35,6 +35,7 @@ public class GenerateCodeFC {
 
     }
 
+    @FCParameter
     private List<File> files;
 
     public GenerateCodeFC() {
