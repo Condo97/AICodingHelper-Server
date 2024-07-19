@@ -1,5 +1,6 @@
 package com.aicodinghelper;
 
+import com.aicodinghelper.openai.functioncall.GenerateCodeFC;
 import com.aicodinghelper.openai.functioncall.PlanCodeGenerationFC;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -142,10 +143,11 @@ public class Main {
         post(Constants.URIs.REGISTER_TRANSACTION_URI, Server::registerTransaction);
         post(Constants.URIs.SUBMIT_FEEDBACK, Server::submitFeedback);
         post(Constants.URIs.VALIDATE_OPEN_AI_KEY, Server::validateOpenAIKey);
-        
+
 //        post(Constants.URIs.Function.CREATE_RECIPE_IDEA, Server.Func::createRecipeIdea);
 
         // Function Calls
+        post(Constants.URIs.GENERATE_CODE_URI, (req, res) -> Server.functionCall(req, res, GenerateCodeFC.class));
         post(Constants.URIs.PLAN_CODE_GENERATION, (req, res) -> Server.functionCall(req, res, PlanCodeGenerationFC.class));
 
         // Get Constants

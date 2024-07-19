@@ -92,6 +92,7 @@ public final class Constants {
     class URIs {
 
         public static final String CALCULATE_TOKENS_URI = "/calculateTokens";
+        public static final String GENERATE_CODE_URI = "/generateCode";
         public static final String GET_CHAT_STREAM_URI = "/streamChat";
         public static final String GET_IMPORTANT_CONSTANTS_URI = "/getImportantConstants";
         public static final String GET_IS_ACTIVE_URI = "/getIsActive";
