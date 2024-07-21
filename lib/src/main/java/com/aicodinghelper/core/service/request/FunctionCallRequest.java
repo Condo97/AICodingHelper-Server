@@ -1,34 +1,33 @@
 package com.aicodinghelper.core.service.request;
 
 import com.oaigptconnector.model.generation.OpenAIGPTModels;
+import com.oaigptconnector.model.request.chat.completion.OAIChatCompletionRequestMessage;
+
+import java.util.List;
 
 public class FunctionCallRequest extends AuthRequest {
 
     private OpenAIGPTModels model;
-    private String systemMessage;
-    private String input;
+    private List<OAIChatCompletionRequestMessage> messages;
+//    private String systemMessage;
+//    private String input;
 
     public FunctionCallRequest() {
 
     }
 
-    public FunctionCallRequest(String authToken, String openAIKey, OpenAIGPTModels model, String systemMessage, String input) {
+    public FunctionCallRequest(String authToken, String openAIKey, OpenAIGPTModels model, List<OAIChatCompletionRequestMessage> messages) {
         super(authToken, openAIKey);
         this.model = model;
-        this.systemMessage = systemMessage;
-        this.input = input;
+        this.messages = messages;
     }
 
     public OpenAIGPTModels getModel() {
         return model;
     }
 
-    public String getSystemMessage() {
-        return systemMessage;
-    }
-
-    public String getInput() {
-        return input;
+    public List<OAIChatCompletionRequestMessage> getMessages() {
+        return messages;
     }
 
 }

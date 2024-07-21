@@ -40,23 +40,23 @@ public class FunctionCallEndpoint {
         boolean isUsingSelfServeOpenAIKey = request.getOpenAIKey() != null;
         String openAIKey = request.getOpenAIKey() != null ? request.getOpenAIKey() : Keys.openAiAPI;
 
-        List<OAIChatCompletionRequestMessage> messages = new ArrayList<>();
-
-        // Create system message with request system message if not null or empty and add to messages
-        if (request.getSystemMessage() != null && !request.getSystemMessage().isEmpty()) {
-            messages.add(
-                    new OAIChatCompletionRequestMessageBuilder(CompletionRole.SYSTEM)
-                            .addText(request.getSystemMessage())
-                            .build()
-            );
-        }
-
-        // Create user message with request input
-        messages.add(
-                new OAIChatCompletionRequestMessageBuilder(CompletionRole.USER)
-                        .addText(request.getInput())
-                        .build()
-        );
+//        List<OAIChatCompletionRequestMessage> messages = new ArrayList<>();
+//
+//        // Create system message with request system message if not null or empty and add to messages
+//        if (request.getSystemMessage() != null && !request.getSystemMessage().isEmpty()) {
+//            messages.add(
+//                    new OAIChatCompletionRequestMessageBuilder(CompletionRole.SYSTEM)
+//                            .addText(request.getSystemMessage())
+//                            .build()
+//            );
+//        }
+//
+//        // Create user message with request input
+//        messages.add(
+//                new OAIChatCompletionRequestMessageBuilder(CompletionRole.USER)
+//                        .addText(request.getInput())
+//                        .build()
+//        );
 
         // Perform function call to get response
         OAIGPTChatCompletionResponse response = FCClient.serializedChatCompletion(
@@ -67,7 +67,7 @@ public class FunctionCallEndpoint {
                 null, // TODO: Make a function with a signature not including responseFormatType
                 openAIKey,
                 httpClient,
-                messages,
+                request.getMessages(),
                 true
         );
 
