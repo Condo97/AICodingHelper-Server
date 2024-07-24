@@ -35,19 +35,19 @@ public class GenerateCodeFC {
 
     }
 
-    @FCParameter(name = "output_files", description = "One or more files to be created or replace current ones as needed per the user request.")
-    private List<File> files;
+    @FCParameter(description = "One or more files to be created or replace current ones as needed per the user request.")
+    private List<File> output_files;
 
     public GenerateCodeFC() {
 
     }
 
-    public GenerateCodeFC(List<File> files) {
-        this.files = files;
+    public GenerateCodeFC(List<File> output_files) {
+        this.output_files = output_files;
     }
 
-    public List<File> getFiles() {
-        return files;
+    public List<File> getOutput_files() {
+        return output_files;
     }
 
 }
