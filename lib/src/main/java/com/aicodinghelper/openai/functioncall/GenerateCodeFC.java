@@ -35,7 +35,7 @@ public class GenerateCodeFC {
 
     }
 
-    @FCParameter
+    @FCParameter(description = "One or more files to be created or replace current ones as needed per the user request.")
     private List<File> files;
 
     public GenerateCodeFC() {
