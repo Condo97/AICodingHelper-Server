@@ -5,7 +5,7 @@ import com.oaigptconnector.model.FunctionCall;
 
 import java.util.List;
 
-@FunctionCall(name = "generate_code")
+@FunctionCall(name = "generate_code", functionDescription = "Creates and replaces code files per the user's request.")
 public class GenerateCodeFC {
 
     public static class File {
@@ -35,7 +35,7 @@ public class GenerateCodeFC {
 
     }
 
-    @FCParameter(description = "One or more files to be created or replace current ones as needed per the user request.")
+    @FCParameter(name = "output_files", description = "One or more files to be created or replace current ones as needed per the user request.")
     private List<File> files;
 
     public GenerateCodeFC() {
