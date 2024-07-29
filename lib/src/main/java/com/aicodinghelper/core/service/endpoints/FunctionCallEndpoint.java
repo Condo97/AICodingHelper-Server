@@ -9,6 +9,7 @@ import com.aicodinghelper.database.dao.pooled.User_AuthTokenDAOPooled;
 import com.aicodinghelper.database.model.objects.User_AuthToken;
 import com.aicodinghelper.exceptions.DBObjectNotFoundFromQueryException;
 import com.aicodinghelper.keys.Keys;
+import com.aicodinghelper.openai.functioncall.FunctionCalls;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oaigptconnector.model.FCClient;
 import com.oaigptconnector.model.OAIChatCompletionRequestMessageBuilder;

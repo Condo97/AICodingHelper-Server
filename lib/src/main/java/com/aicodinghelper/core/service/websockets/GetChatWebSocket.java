@@ -12,8 +12,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oaigptconnector.model.OAIClient;
-import com.oaigptconnector.model.request.chat.completion.OAIChatCompletionRequest;
-import com.oaigptconnector.model.request.chat.completion.OAIChatCompletionRequestStreamOptions;
+import com.oaigptconnector.model.OAIFunctionCallSerializer;
+import com.oaigptconnector.model.OAISerializerException;
+import com.oaigptconnector.model.request.chat.completion.*;
 import com.oaigptconnector.model.response.chat.completion.stream.OpenAIGPTChatCompletionStreamResponse;
 import com.aicodinghelper.Constants;
 import com.aicodinghelper.exceptions.CapReachedException;
@@ -134,7 +135,7 @@ public class GetChatWebSocket {
         }
     }
 
-    protected void getChat(Session session, String message) throws MalformedJSONException, InvalidAuthenticationException, UnhandledException, CapReachedException, DBSerializerPrimaryKeyMissingException, DBSerializerException, SQLException, InterruptedException, InvocationTargetException, IllegalAccessException, UnrecoverableKeyException, AppStoreErrorResponseException, CertificateException, IOException, URISyntaxException, KeyStoreException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchMethodException, InstantiationException {
+    protected void getChat(Session session, String message) throws MalformedJSONException, InvalidAuthenticationException, UnhandledException, CapReachedException, DBSerializerPrimaryKeyMissingException, DBSerializerException, SQLException, InterruptedException, InvocationTargetException, IllegalAccessException, UnrecoverableKeyException, AppStoreErrorResponseException, CertificateException, IOException, URISyntaxException, KeyStoreException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchMethodException, InstantiationException, OAISerializerException {
 //        System.out.println("Received message: " + message);
 
         /*** PARSE REQUEST ***/
@@ -231,6 +232,25 @@ public class GetChatWebSocket {
             streamOptions.setInclude_usage(true); // If user has included stream options set include usage to true
         chatCompletionRequest.setStream_options(new OAIChatCompletionRequestStreamOptions(true));
 
+        // If function call and function call class are not null serialize and add the function to chatCompletionRequest
+        if (gcRequest.getFunction() != null && gcRequest.getFunction().getFunctionClass() != null) {
+            // Serialize FC object
+            Object serializedFCObject = OAIFunctionCallSerializer.objectify(gcRequest.getFunction().getFunctionClass());
+
+            // Get FC name
+            String fcName = OAIFunctionCallSerializer.getFunctionName(gcRequest.getFunction().getFunctionClass());
+
+            // Create ToolChoiceFunction
+            OAIChatCompletionRequestToolChoiceFunction.Function requestToolChoiceFunction = new OAIChatCompletionRequestToolChoiceFunction.Function(fcName);
+            OAIChatCompletionRequestToolChoiceFunction requestToolChoice = new OAIChatCompletionRequestToolChoiceFunction(requestToolChoiceFunction);
+
+            // Add to chatCompletionRequest
+            chatCompletionRequest.setTools(List.of(new OAIChatCompletionRequestTool(
+                    OAIChatCompletionRequestToolType.FUNCTION,
+                    serializedFCObject
+            )));
+        }
+
         // Create stream set to null
         Stream<String> chatStream = null;
 
@@ -266,7 +286,7 @@ public class GetChatWebSocket {
                 // Get response as JsonNode
                 JsonNode responseJSON = new ObjectMapper().readValue(response, JsonNode.class);
 
-//                System.out.println("RESPONSE: " + response);
+                System.out.println("RESPONSE: " + response);
 
                 // Get responseJSON as OpenAIGPTChatCompletionStreamResponse
                 OpenAIGPTChatCompletionStreamResponse streamResponse;
