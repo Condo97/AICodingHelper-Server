@@ -251,6 +251,7 @@ public class GetChatWebSocket {
                     serializedFCObject
             )));
             chatCompletionRequest.setTool_choice(requestToolChoice);
+            System.out.println(chatCompletionRequest.getTool_choice());
         }
 
         // Create stream set to null
