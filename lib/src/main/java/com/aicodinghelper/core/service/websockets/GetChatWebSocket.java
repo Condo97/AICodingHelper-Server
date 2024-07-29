@@ -250,6 +250,7 @@ public class GetChatWebSocket {
                     OAIChatCompletionRequestToolType.FUNCTION,
                     serializedFCObject
             )));
+            chatCompletionRequest.setTool_choice(requestToolChoice);
         }
 
         // Create stream set to null
