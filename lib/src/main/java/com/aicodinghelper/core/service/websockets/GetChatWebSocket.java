@@ -234,7 +234,6 @@ public class GetChatWebSocket {
 
         // If function call and function call class are not null serialize and add the function to chatCompletionRequest
         if (gcRequest.getFunction() != null && gcRequest.getFunction().getFunctionClass() != null) {
-            System.out.println("HERE");
             // Serialize FC object
             Object serializedFCObject = OAIFunctionCallSerializer.objectify(gcRequest.getFunction().getFunctionClass());
 
@@ -251,7 +250,6 @@ public class GetChatWebSocket {
                     serializedFCObject
             )));
             chatCompletionRequest.setTool_choice(requestToolChoice);
-            System.out.println(chatCompletionRequest.getTool_choice());
         }
 
         // Create stream set to null
@@ -296,6 +294,7 @@ public class GetChatWebSocket {
                 try {
                     streamResponse = new ObjectMapper().treeToValue(responseJSON, OpenAIGPTChatCompletionStreamResponse.class);
                 } catch (JsonProcessingException e) {
+                    System.out.println("Error writing as OpenAIGPTChatCompletionStreamResponse!");
                     // If JsonProcessingException send error response and return
                     BodyResponse br = BodyResponseFactory.createBodyResponse(ResponseStatus.OAIGPT_ERROR, responseJSON);
 
