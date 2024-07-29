@@ -234,6 +234,7 @@ public class GetChatWebSocket {
 
         // If function call and function call class are not null serialize and add the function to chatCompletionRequest
         if (gcRequest.getFunction() != null && gcRequest.getFunction().getFunctionClass() != null) {
+            System.out.println("HERE");
             // Serialize FC object
             Object serializedFCObject = OAIFunctionCallSerializer.objectify(gcRequest.getFunction().getFunctionClass());
 
