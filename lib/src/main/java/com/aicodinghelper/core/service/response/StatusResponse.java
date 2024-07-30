@@ -5,6 +5,7 @@ import com.aicodinghelper.core.service.ResponseStatus;
 
 public class StatusResponse {
 
+    @JsonProperty(value = "Success")
     private ResponseStatus status;
 
     public StatusResponse() {
@@ -20,9 +21,9 @@ public class StatusResponse {
     }
 
     // Is this too hacky?
-    @JsonProperty(value = "Success")
-    public int getSuccess() {
-        return status.Success;
-    }
+//    @JsonProperty(value = "Success")
+//    public int getSuccess() {
+//        return status.Success;
+//    }
 
 }
