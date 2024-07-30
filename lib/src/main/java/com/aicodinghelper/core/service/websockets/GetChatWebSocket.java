@@ -274,6 +274,7 @@ public class GetChatWebSocket {
         // Create completionTokens and promptTokens
         AtomicReference<Integer> completionTokens = new AtomicReference<>(0);
         AtomicReference<Integer> promptTokens = new AtomicReference<>(0);
+        StringBuilder sbError = new StringBuilder();
 
         // Parse OpenAIGPTChatCompletionStreamResponse then convert to GetChatResponse and send it in BodyResponse as response :-)
         chatStream.forEach(response -> {
@@ -295,10 +296,11 @@ public class GetChatWebSocket {
                     streamResponse = new ObjectMapper().treeToValue(responseJSON, OpenAIGPTChatCompletionStreamResponse.class);
                 } catch (JsonProcessingException e) {
                     System.out.println("Error writing as OpenAIGPTChatCompletionStreamResponse!");
-                    // If JsonProcessingException send error response and return
-                    BodyResponse br = BodyResponseFactory.createBodyResponse(ResponseStatus.OAIGPT_ERROR, responseJSON);
-
-                    session.getRemote().sendString(new ObjectMapper().writeValueAsString(br));
+                    // If JsonProcessingException append response to sbError and return
+                    sbError.append(response);
+//                    BodyResponse br = BodyResponseFactory.createBodyResponse(ResponseStatus.OAIGPT_ERROR, responseJSON);
+//
+//                    session.getRemote().sendString(new ObjectMapper().writeValueAsString(br));
 
                     return;
                 }
@@ -340,6 +342,12 @@ public class GetChatWebSocket {
 
 
         /*** FINISH UP ***/
+
+        // If sbError is not empty send to client in body response with OAIGPT_ERROR
+        if (!sbError.isEmpty()) {
+            BodyResponse br = BodyResponseFactory.createBodyResponse(ResponseStatus.OAIGPT_ERROR, sbError.toString());
+            session.getRemote().sendString(new ObjectMapper().writeValueAsString(br));
+        }
 
         // If not isUsingSelfServeOpenAIKey, Insert Chat in DB
         if (!isUsingSelfServeOpenAIKey) {
