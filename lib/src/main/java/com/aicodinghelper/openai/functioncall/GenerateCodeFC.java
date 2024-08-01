@@ -5,36 +5,28 @@ import com.oaigptconnector.model.FunctionCall;
 
 import java.util.List;
 
-@FunctionCall(name = "generate_code", functionDescription = "Creates and replaces code files per the user's request.")
+@FunctionCall(name = "generate_code", functionDescription = "Refactor multiple code files, edit and create, long output capable. You are to include ALL file filepaths and content per the user's request. To create a file you are to include a new filepath and the file content that intelligently fits with the rest of the code. To edit a file you are to include the file's existing filepath and all of the code for the file. You should never include placeholders unless explicitly asked for, you should always provide the implementation. It is imperative that the code works. You are generating complete code.")
 public class GenerateCodeFC {
 
     public static class File {
 
-        @FCParameter(description = "Will create if doesn't exist and replace if does. Include proper extension.")
+        @FCParameter(description = "The filepath of the file to edit or create. Include proper extension.")
         private String filepath;
 
-        @FCParameter(description = "A short explanation of the changes.")
-        private String explanation;
-
-        @FCParameter(description = "Content of file.")
+        @FCParameter(description = "Entire content of the file, will be set as content to filepath in the user's file system.")
         private String content;
 
         public File() {
 
         }
 
-        public File(String filepath, String explanation, String content) {
+        public File(String filepath, String content) {
             this.filepath = filepath;
-            this.explanation = explanation;
             this.content = content;
         }
 
         public String getFilepath() {
             return filepath;
-        }
-
-        public String getExplanation() {
-            return explanation;
         }
 
         public String getContent() {
@@ -43,7 +35,7 @@ public class GenerateCodeFC {
 
     }
 
-    @FCParameter(description = "One or more files to be created or replace current ones as needed per the user request.")
+    @FCParameter(description = "Files that are created or replace current ones. You are to be liberal in your responses and include all files and code.")
     private List<File> output_files;
 
     public GenerateCodeFC() {
