@@ -13,6 +13,9 @@ public class GenerateCodeFC {
         @FCParameter(description = "Will create if doesn't exist and replace if does. Include proper extension.")
         private String filepath;
 
+        @FCParameter(description = "A short explanation of the changes.")
+        private String explanation;
+
         @FCParameter(description = "Content of file.")
         private String content;
 
@@ -20,13 +23,18 @@ public class GenerateCodeFC {
 
         }
 
-        public File(String filepath, String content) {
+        public File(String filepath, String explanation, String content) {
             this.filepath = filepath;
+            this.explanation = explanation;
             this.content = content;
         }
 
         public String getFilepath() {
             return filepath;
+        }
+
+        public String getExplanation() {
+            return explanation;
         }
 
         public String getContent() {
